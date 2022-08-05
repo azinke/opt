@@ -51,15 +51,15 @@ int main (int argc, char* argv[]) {
 
   parse(&parser, argc, argv);
 
-  char v = *(char*)get_option(&parser, "-v");
-  char *vname = (char*) get_option(&parser, "--name");
-  float *gpa = (float*) get_option(&parser, "--gpa");
+  char v = *(char*)get_option(&parser, "version");
+  char *vname = (char*) get_option(&parser, "name");
+  float *gpa = (float*) get_option(&parser, "gpa");
   if (vname != NULL) {
     printf("ok!\n");
     printf("Name: %s\n\n", vname);
   }
   if (gpa != NULL) {
-    printf("GPA: %.8f\n", *gpa);
+    printf("GPA: %.8f\n\n", *gpa);
   }
 
 

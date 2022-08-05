@@ -199,10 +199,15 @@ void* get_option(parser_t *parser, char *cli_arg) {
  *    EOPT_ARG_NO_MATCH : Not matched
  */
 int is_arg(char *cli_arg, arg_t *arg) {
-  if (cli_arg[0] != '-') return EOPT_NO_ARG;
-  int arglen = strlen(cli_arg);
-  int smatch = strncmp(cli_arg, arg->opt->args, arglen);
-  int lmatch = strncmp(cli_arg, arg->opt->argl, arglen);
+  // Number of single or double dash at the begining of a CLI
+  // argument
+  int ndash = 0;
+  if (cli_arg[0] == '-') ndash++;
+  if (cli_arg[1] == '-') ndash++;
+
+  int arglen = strlen(cli_arg + ndash);
+  int smatch = strncmp(cli_arg + ndash, arg->opt->args + 1, arglen);
+  int lmatch = strncmp(cli_arg + ndash, arg->opt->argl + 2, arglen);
   if ((smatch == 0) || (lmatch == 0)) return OPT_SUCESS;
   return EOPT_ARG_NO_MATCH;
 }

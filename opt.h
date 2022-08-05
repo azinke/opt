@@ -16,8 +16,6 @@
 extern "C" {
 #endif
 
-#define OPT_DEFAULT(x)      (void*)(x)
-
 #define SHORT_ARG_SIZE      8
 #define LONG_ARG_SIZE       16
 #define HELP_ARG_SIZE       256
@@ -200,7 +198,7 @@ typedef struct cli_parser {
 parser_t init_parser(const char *name, const char *description);
 void free_parser(parser_t *parser);
 
-/** Add new CLI option to the */
+/** Add new CLI option to the parser */
 int add_arg(parser_t *parser, option_t *option);
 
 /** Parse arguments */

@@ -66,7 +66,7 @@ int add_arg(parser_t* parser, option_t *option) {
     parser->last_arg->next = (void*) argc;
     parser->last_arg = argc;
   }
-  return OPT_SUCESS;
+  return OPT_SUCCESS;
 }
 
 /**
@@ -127,7 +127,7 @@ int parse(parser_t *parser, int argc, char* argv[]) {
   for (int idx = 1; idx < argc; idx++) {
     arg_t *arg = parser->first_arg;
     while (arg != NULL) {
-      if (is_arg(argv[idx], arg) == OPT_SUCESS) {
+      if (is_arg(argv[idx], arg) == OPT_SUCCESS) {
         switch (arg->opt->type) {
           case OPT_BOOL: {
             // Set the boolean as "True" when present
@@ -177,7 +177,7 @@ int parse(parser_t *parser, int argc, char* argv[]) {
 void* get_option(parser_t *parser, char *cli_arg) {
   arg_t *arg = parser->first_arg;
   while (arg != NULL) {
-    if (is_arg(cli_arg, arg) == OPT_SUCESS) {
+    if (is_arg(cli_arg, arg) == OPT_SUCCESS) {
       if (arg->is_set) return arg->opt->value;
       return arg->opt->default_value;
     }
@@ -208,6 +208,6 @@ int is_arg(char *cli_arg, arg_t *arg) {
   int arglen = strlen(cli_arg + ndash);
   int smatch = strncmp(cli_arg + ndash, arg->opt->args + 1, arglen);
   int lmatch = strncmp(cli_arg + ndash, arg->opt->argl + 2, arglen);
-  if ((smatch == 0) || (lmatch == 0)) return OPT_SUCESS;
+  if ((smatch == 0) || (lmatch == 0)) return OPT_SUCCESS;
   return EOPT_ARG_NO_MATCH;
 }

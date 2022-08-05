@@ -22,7 +22,7 @@ extern "C" {
 #define ARG_VALUE_SIZE      16
 
 
-#define OPT_SUCESS          0
+#define OPT_SUCCESS         0
 
 #define EOPT_MEM_ALLOC      (-1)
 #define EOPT_NO_ARG         (-2)

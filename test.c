@@ -55,7 +55,6 @@ int main (int argc, char* argv[]) {
   char *vname = (char*) get_option(&parser, "name");
   float *gpa = (float*) get_option(&parser, "gpa");
   if (vname != NULL) {
-    printf("ok!\n");
     printf("Name: %s\n\n", vname);
   }
   if (gpa != NULL) {

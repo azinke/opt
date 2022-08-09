@@ -16,9 +16,6 @@
 extern "C" {
 #endif
 
-#define SHORT_ARG_SIZE      8
-#define LONG_ARG_SIZE       16
-#define HELP_ARG_SIZE       256
 #define ARG_VALUE_SIZE      16
 
 
@@ -67,7 +64,7 @@ typedef struct cli_option {
    * Normaly a single dash followed by one letter. But a couple more
    * letters are supported
    */
-  char args[SHORT_ARG_SIZE];
+  const char *args;
 
   /**
    * @brief Long CLI argument
@@ -76,7 +73,7 @@ typedef struct cli_option {
    * The argument can be provided including the double dashes at
    * the beginning
    */
-  char argl[LONG_ARG_SIZE];
+  const char *argl;
 
   /**
    * @brief Type of the CLI argument.
@@ -103,7 +100,7 @@ typedef struct cli_option {
    *
    * Reasonable length message describing the meaning of the CLI option
    */
-  char help[HELP_ARG_SIZE];
+  const char *help;
 
   /**
    * @brief Default value of the option

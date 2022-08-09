@@ -93,7 +93,7 @@ void print_help(parser_t* parser) {
   printf("usage: %s", parser->name);
   arg_t *argc = parser->first_arg;
   while(argc != NULL) {
-    if (*argc->opt->args != '\0') printf(" [%s]", argc->opt->args);
+    if (argc->opt->args != NULL) printf(" [%s]", argc->opt->args);
     else printf(" [%s]", argc->opt->argl);
     argc = (arg_t*)argc->next;
   }
@@ -102,11 +102,16 @@ void print_help(parser_t* parser) {
   printf("options:\n");
 
   argc = parser->first_arg;
+  const int buffer_size = 32;
+  char buf[buffer_size];
   while(argc != NULL) {
-    if (*argc->opt->args != '\0')
-      printf("  %s,", argc->opt->args);
-    printf("  %s \t\t\t", argc->opt->argl);
-    if (*argc->opt->args == '\0') printf("\t");
+    memset(buf, '\0', buffer_size);
+    if (argc->opt->args != NULL){
+      strcpy(buf, argc->opt->args);
+      strcat(buf, ", ");
+    }
+    if (argc->opt->argl != NULL) strcat(buf, argc->opt->argl);
+    printf("    %-30s ", buf);
     printf("%s \n", argc->opt->help);
     argc = (arg_t*)argc->next;
   }
@@ -206,8 +211,14 @@ int is_arg(char *cli_arg, arg_t *arg) {
   if (cli_arg[1] == '-') ndash++;
 
   int arglen = strlen(cli_arg + ndash);
-  int smatch = strncmp(cli_arg + ndash, arg->opt->args + 1, arglen);
-  int lmatch = strncmp(cli_arg + ndash, arg->opt->argl + 2, arglen);
+  int smatch = -1;
+  int lmatch = -1;
+  if (arg->opt->args != NULL) {
+    smatch = strncmp(cli_arg + ndash, arg->opt->args + 1, arglen);
+  }
+  if (arg->opt->argl != NULL) {
+    lmatch = strncmp(cli_arg + ndash, arg->opt->argl + 2, arglen);
+  }
   if ((smatch == 0) || (lmatch == 0)) return OPT_SUCCESS;
   return EOPT_ARG_NO_MATCH;
 }

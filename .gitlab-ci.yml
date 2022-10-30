@@ -1,0 +1,28 @@
+
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == "main"
+
+stages:
+  - build
+  - test
+
+build:
+  stage: build
+  artifacts:
+    paths:
+      - test_options
+      - test_commands
+    expire_in: 1 hour
+  script:
+    - apk update
+    - apk add --no-cache musl-dev gcc make
+    - echo "Building"
+    - make build
+
+test:
+  stage: test
+  script:
+    - ./test_options
+    - ./test_commands -h

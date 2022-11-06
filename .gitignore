@@ -2,4 +2,6 @@
 # Object files
 *.o
 
-test
+test_*
+test/*
+!test/*.c

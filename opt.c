@@ -125,11 +125,23 @@ void print_help(parser_t* parser) {
  * @return int 
  */
 int parse(parser_t *parser, int argc, char* argv[]) {
+  unsigned char option_found = 0;
+  unsigned char missing_value = 0;
   if (argc <= 1) return 0;
   for (int idx = 1; idx < argc; idx++) {
     arg_t *arg = parser->first_arg;
+    option_found = 0;
+    missing_value = 0;
     while (arg != NULL) {
       if (is_arg(argv[idx], arg) == OPT_SUCCESS) {
+        option_found = 1;
+        if ((arg->opt->type != OPT_BOOL) && (idx+1 >= argc)) {
+          printf(
+            "\033[0;31mValue expected for option '%s', "
+            "but none provided.\033[0m\n\n", argv[idx]);
+          missing_value = 1;
+          break;
+        }
         switch (arg->opt->type) {
           case OPT_BOOL: {
             // Set the boolean as "True" when present
@@ -171,6 +183,14 @@ int parse(parser_t *parser, int argc, char* argv[]) {
       }
       arg = (arg_t*)arg->next;
     }
+    if (!option_found) {
+      printf("\033[0;31mUnkonwn option: '%s'\033[0m\n\n", argv[idx]);
+    }
+    if (missing_value || !option_found) {
+      print_help(parser);
+      free_parser(parser);
+      exit(1);
+    }
   }
 }
 
@@ -207,23 +227,17 @@ void* get_option(parser_t *parser, char *cli_arg) {
  *    EOPT_ARG_NO_MATCH : Not matched
  */
 int is_arg(char *cli_arg, arg_t *arg) {
-  // Number of single or double dash at the begining of a CLI
-  // argument
-  int ndash = 0;
-  if (cli_arg[0] == '-') ndash++;
-  if (cli_arg[1] == '-') ndash++;
-
-  int arglen = strlen(cli_arg + ndash);
+  int arglen = strlen(cli_arg);
   int smatch = -1;
   int lmatch = -1;
   if (arg->opt->args != NULL) {
-    if (strlen(arg->opt->args + ndash) == arglen) {
-      smatch = strncmp(cli_arg + ndash, arg->opt->args + ndash, arglen);
+    if (strlen(arg->opt->args) == arglen) {
+      smatch = strncmp(cli_arg, arg->opt->args, arglen);
     }
   }
   if (arg->opt->argl != NULL) {
-    if (strlen(arg->opt->argl + ndash) == arglen) {
-      lmatch = strncmp(cli_arg + ndash, arg->opt->argl + ndash, arglen);
+    if (strlen(arg->opt->argl) == arglen) {
+      lmatch = strncmp(cli_arg, arg->opt->argl, arglen);
     }
   }
   if ((smatch == 0) || (lmatch == 0)) return OPT_SUCCESS;

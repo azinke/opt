@@ -120,7 +120,7 @@ int main (int argc, char* argv[]) {
 
   char* vhelp = (char*)get_option(&parser, "-h");
 
-  if (*vhelp) print_help(&parser);
+  if (vhelp != NULL) print_help(&parser);
 
   free_parser(&parser);
 }

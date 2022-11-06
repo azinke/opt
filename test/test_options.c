@@ -35,7 +35,7 @@ int main (int argc, char* argv[]) {
   option_t name = {
     .args = "-n",
     .argl = "--name",
-    .help = "Print the name of the user",
+    .help = "Name of the user",
     .type = OPT_STR,
     .default_value=NULL,
   };

@@ -127,7 +127,7 @@ void print_help(parser_t* parser) {
 int parse(parser_t *parser, int argc, char* argv[]) {
   unsigned char option_found = 0;
   unsigned char missing_value = 0;
-  if (argc <= 1) return 0;
+
   for (int idx = 1; idx < argc; idx++) {
     arg_t *arg = parser->first_arg;
     option_found = 0;
@@ -192,6 +192,27 @@ int parse(parser_t *parser, int argc, char* argv[]) {
       exit(1);
     }
   }
+
+  /** Check for required CLI options */
+  arg_t *arg = parser->first_arg;
+  unsigned int arg_count = 0;
+  while(arg != NULL) {
+    if (arg->opt->required && !arg->is_set) {
+      if (arg_count == 0) printf("\033[0;31mOption ");
+      if (arg->opt->argl != NULL) printf("'%s' ", arg->opt->argl);
+      else printf("'%s' ", arg->opt->args);
+      arg_count++;
+    }
+    arg = (arg_t*) arg->next;
+  }
+  if (arg_count == 1) printf("is required.\033[0m\n\n");
+  else if (arg_count > 1) printf("are required.\033[0m\n\n");
+  if (arg_count != 0) {
+    print_help(parser);
+    free_parser(parser);
+    exit(1);
+  }
+  return OPT_SUCCESS;
 }
 
 

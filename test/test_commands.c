@@ -8,13 +8,15 @@
  * @copyright Copyright (c) 2022
  */
 
-# include <stdio.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include "../opt.h"
 
 #define VERSION   "0.0.1"
 
 void print_version() {
   printf("test commands v" VERSION "\n");
+  exit(0);
 }
 
 int main (int argc, char* argv[]) {
